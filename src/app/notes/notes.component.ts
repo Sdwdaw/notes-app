@@ -1,5 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import {Observable} from "rxjs";
+import {Component, Input, OnChanges, OnInit} from '@angular/core';
+import {Observable, of} from "rxjs";
 import {HttpClient, HttpHeaders} from "@angular/common/http";
 
 @Component({
@@ -7,10 +7,10 @@ import {HttpClient, HttpHeaders} from "@angular/common/http";
   templateUrl: './notes.component.html',
   styleUrls: ['./notes.component.css']
 })
-export class NotesComponent implements OnInit {
+export class NotesComponent implements OnChanges {
   private notesUrl = 'api/notes';  // URL to web api
   notes: Note[];
-  section: string;
+  @Input() section: string;
   httpOptions = {
     headers: new HttpHeaders({ 'Content-Type': 'application/json' })
   };
@@ -19,12 +19,13 @@ export class NotesComponent implements OnInit {
     private http: HttpClient
   ) { }
 
-  ngOnInit() {
+  ngOnChanges() {
     this.getNotesNotes();
   }
 
   getNotes(): Observable<Note[]> {
-    return this.http.get<Note[]>(this.notesUrl);
+    if (!this.section == null) return of([] as Note[]);
+    return this.http.get<Note[]>(this.notesUrl, {params: {section: this.section}});
   }
 
   getNotesNotes(): void {
@@ -32,17 +33,18 @@ export class NotesComponent implements OnInit {
       .subscribe(notes => this.notes = notes);
   }
 
-  add(text: string) {
-    text = text.trim();
-    if (!text) {return;}
-    this.addNote( { text } as Note)
-      .subscribe(note => {
-        this.notes.push(note);
-      });
+  add(noteText: HTMLTextAreaElement) {
+    const note = {
+      text: noteText.value,
+      section: this.section,
+    };
+    noteText.value = '';
+    this.addNote(note);
   }
 
-  addNote(note: Note): Observable<Note> {
-    return this.http.post<Note>(this.notesUrl, note, this.httpOptions);
+  addNote(note: Note): void {
+    this.http.post<Note>(this.notesUrl, note, this.httpOptions)
+      .subscribe((data) => this.getNotesNotes());
     }
 
   remove(idx) {

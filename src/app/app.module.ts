@@ -9,16 +9,24 @@ import { HttpClientInMemoryWebApiModule } from 'angular-in-memory-web-api';
 import { InMemoryDataService }  from './in-memory-data.service';
 import { NotesComponent } from './notes/notes.component';
 import { SectionsComponent } from './sections/sections.component';
+import { SectionFilterPipe } from './section-filter.pipe';
+import { NotesEditorComponent } from './notes-editor/notes-editor.component';
+import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
+import {Routes} from "@angular/router";
 
 @NgModule({
   declarations: [
 
     AppComponent,
     NotesComponent,
-    SectionsComponent
+    SectionsComponent,
+    SectionFilterPipe,
+    NotesEditorComponent,
+    PageNotFoundComponent
   ],
   imports: [
     BrowserModule,
+    RouterModule.forRoot(appRoutes),
     FormsModule,
     AppRoutingModule,
     HttpClientModule,
@@ -33,4 +41,10 @@ import { SectionsComponent } from './sections/sections.component';
   providers: [],
   bootstrap: [AppComponent]
 })
+
+const appRoutes: Routes = [
+  { path: '', component: NotesEditorComponent },
+  { path: '**', component: PageNotFoundComponent }
+];
+
 export class AppModule { }
