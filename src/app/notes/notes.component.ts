@@ -1,6 +1,7 @@
-import {Component, Input, OnChanges, OnInit} from '@angular/core';
+import {Component, ElementRef, Input, OnChanges, OnInit, ViewChild} from '@angular/core';
 import {Observable, of} from "rxjs";
 import {HttpClient, HttpHeaders} from "@angular/common/http";
+import {NotesService} from "../notes.service";
 
 @Component({
   selector: 'app-notes',
@@ -15,21 +16,19 @@ export class NotesComponent implements OnChanges {
     headers: new HttpHeaders({ 'Content-Type': 'application/json' })
   };
   text: string;
+  @ViewChild('noteText' , { static: false })
+  noteText: ElementRef<HTMLTextAreaElement>;
   constructor(
-    private http: HttpClient
+    private http: HttpClient,
+    private notesService: NotesService
   ) { }
 
   ngOnChanges() {
-    this.getNotesNotes();
+    this.readNotes();
   }
 
-  getNotes(): Observable<Note[]> {
-    if (!this.section == null) return of([] as Note[]);
-    return this.http.get<Note[]>(this.notesUrl, {params: {section: this.section}});
-  }
-
-  getNotesNotes(): void {
-    this.getNotes()
+  readNotes(): void {
+    this.notesService.getNotes(this.section)
       .subscribe(notes => this.notes = notes);
   }
 
@@ -44,7 +43,7 @@ export class NotesComponent implements OnChanges {
 
   addNote(note: Note): void {
     this.http.post<Note>(this.notesUrl, note, this.httpOptions)
-      .subscribe((data) => this.getNotesNotes());
+      .subscribe((data) => this.readNotes());
     }
 
   remove(idx) {
@@ -53,6 +52,6 @@ export class NotesComponent implements OnChanges {
 
 }
 
-interface Note {
+export interface Note {
   text: string;
 }

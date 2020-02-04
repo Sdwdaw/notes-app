@@ -7,9 +7,5 @@ import {Component} from '@angular/core';
 })
 export class AppComponent {
   title = 'notes-app';
-  section: string;
 
-  setSection(section: string) {
-    this.section = section;
-  }
 }

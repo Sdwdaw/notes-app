@@ -1,4 +1,4 @@
-import {Component, EventEmitter, OnInit, Output} from '@angular/core';
+import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {HttpClient} from "@angular/common/http";
 import {Observable} from "rxjs";
 
@@ -40,8 +40,8 @@ export class SectionsComponent implements OnInit {
     new EventEmitter<string>();
 
   showSection(section: Section) {
-    this.activeSection = section.title;
-    this.sectionChanged.emit(this.activeSection);
+    // this.activeSection = section.title;
+    this.sectionChanged.emit(section.title);
   }
 
   addSection(newSection: HTMLInputElement) {
@@ -63,6 +63,13 @@ export class SectionsComponent implements OnInit {
 
   writeSections() {
     return this.http.post(this.sectionsReplaceUrl, this.sections);
+  }
+
+  @Input()
+  set section(section: string) {
+    if (section && section.length > 0) {
+      this.activeSection = section;
+    }
   }
 
 }

@@ -1,0 +1,63 @@
+<div class="col-md-8 offset-md-2">
+  <div class="card">
+    <div class="card-header">User registration form</div>
+    <div class="card-body">
+
+      <form class="css-form" name="userForm"
+            #userForm="ngForm" (ngSubmit)="onSubmit()">
+        <div class="form-group">
+          <label for="userName">User name:</label>
+          <input type="text" class="form-control" id="userName"
+                 placeholder="Username" name="userName"
+                 #userName="ngModel" [(ngModel)]="user.userName"
+                 required>
+        </div>
+        <div class="form-group">
+          <label for="password">Password:</label>
+          <input type="text" class="form-control" id="password"
+                 placeholder="" name="password"
+                 #password="ngModel" [(ngModel)]="user.password"
+                 required>
+        </div>
+        <div class="form-group">
+          <label for="password2">Confirm password:</label>
+          <input type="text" class="form-control" id="password2"
+                 placeholder="" name="password2"
+                 #password2="ngModel" [(ngModel)]="user.password2"
+                 required>
+        </div>
+        <div class="form-group">
+          <label for="dateOfBirth">Date Of Birth:</label>
+          <input type="text" class="form-control" id="dateOfBirth"
+                 placeholder="Birth Date" name="dateOfBirth"
+                 #dateOfBirth="ngModel" [(ngModel)]="user.dateOfBirth"
+                 required
+                 pattern="[0-9][0-9]\.[0-1][0-9]\.[1-2][0-9][0-9][0-9]">
+          <span *ngIf="dateOfBirth.errors && dateOfBirth.errors.pattern && dateOfBirth.touched">
+            Date of birth should be in format dd.mm.yyyy
+          </span>
+        </div>
+        <div class="form-group" *ngIf="user.subscribe">
+          <label for="email">Email:</label>
+          <input type="text" class="form-control" id="email"
+                 placeholder="email" name="email"
+                 #email="ngModel" [(ngModel)]="user.email"
+                 pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$">
+          <span *ngIf="email.errors && email.errors.pattern && email.touched">
+            Email should be valid
+          </span>
+        </div>
+        <div class="form-group">
+          <div class="checkbox">
+            <label><input type="checkbox" name="subscribe"
+                          [(ngModel)]="user.subscribe">
+              Subscribe for newsletters
+            </label>
+          </div>
+        </div>
+        <button type="submit" class="btn btn-primary" [disabled]="!userForm.valid">Submit</button>
+      </form>
+
+    </div>
+  </div>
+</div>

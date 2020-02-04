@@ -12,7 +12,19 @@ import { SectionsComponent } from './sections/sections.component';
 import { SectionFilterPipe } from './section-filter.pipe';
 import { NotesEditorComponent } from './notes-editor/notes-editor.component';
 import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
-import {Routes} from "@angular/router";
+import {RouterModule, Routes} from "@angular/router";
+import { ViewSectionComponent } from './view-section/view-section.component';
+import {CanDeactivateNoteService} from "./can-deactivate-note.service";
+import { UserFormComponent } from './user-form/user-form.component';
+
+const appRoutes: Routes = [
+
+  { path: 'viewSection/:name', component: ViewSectionComponent },
+  { path: 'register', component: UserFormComponent },
+  { path: ':name', component: NotesEditorComponent, canDeactivate: [CanDeactivateNoteService] },
+  { path: '', component: NotesEditorComponent, canDeactivate: [CanDeactivateNoteService] },
+  { path: '**', component: PageNotFoundComponent }
+];
 
 @NgModule({
   declarations: [
@@ -22,7 +34,9 @@ import {Routes} from "@angular/router";
     SectionsComponent,
     SectionFilterPipe,
     NotesEditorComponent,
-    PageNotFoundComponent
+    PageNotFoundComponent,
+    ViewSectionComponent,
+    UserFormComponent
   ],
   imports: [
     BrowserModule,
@@ -41,10 +55,5 @@ import {Routes} from "@angular/router";
   providers: [],
   bootstrap: [AppComponent]
 })
-
-const appRoutes: Routes = [
-  { path: '', component: NotesEditorComponent },
-  { path: '**', component: PageNotFoundComponent }
-];
 
 export class AppModule { }
